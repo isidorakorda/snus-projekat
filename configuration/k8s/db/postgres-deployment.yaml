@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: postgres-config
+  name: postgres
   namespace: db
   labels:
     app: postgres
@@ -24,18 +24,22 @@ spec:
     spec:
       volumes:
         - name: "postgres-storage"
-          hostPath:
-            path: /mnt/data/postgres
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 
       containers:
         - name: snus-db
           image: postgres:16-alpine
           ports:
             - containerPort: 5432
+
           envFrom:
             - secretRef:
                 name: postgres-secrets
+
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
 
           volumeMounts:                 
             - name: postgres-storage               
