@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: postgres-config
+  namespace: db
+  labels:
+    app: postgres
+    group: db
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: postgres
+  
+  template:
+    metadata:
+      labels:
+        app: postgres
+        group: db
+
+    spec:
+      volumes:
+        - name: "postgres-storage"
+          hostPath:
+            path: /mnt/data/postgres
+            type: DirectoryOrCreate
+
+      containers:
+        - name: snus-db
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+
+          volumeMounts:                 
+            - name: postgres-storage               
+              mountPath: /var/lib/postgresql/data  
+
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"      
+
