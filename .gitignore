@@ -52,3 +52,10 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# All env variables
+*.env
+
+# Ignore postgres data
+*-secrets.yaml
+*/db-data
