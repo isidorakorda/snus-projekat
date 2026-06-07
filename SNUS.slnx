@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="SensorRegistry/SensorRegistry.csproj" Id="b940af2f-205c-4479-92b1-bfff1f32dd90" />
   <Project Path="Server/Server.csproj" />
 </Solution>

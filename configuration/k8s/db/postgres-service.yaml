@@ -3,7 +3,7 @@ kind: Service
 
 metadata:
   name: postgres
-  namespace: db
+  namespace: backend
   labels:
     group: db
   

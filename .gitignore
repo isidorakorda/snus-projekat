@@ -59,3 +59,12 @@ nunit-*.xml
 # Ignore postgres data
 *-secrets.yaml
 */db-data
+
+
+.vs/
+bin/
+obj/
+*.user
+*.suo
+appsettings.json
+/.vs
