@@ -8,8 +8,8 @@ using SensorRegistry.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var config = KubernetesClientConfiguration.InClusterConfig();
-Console.WriteLine(">>> CONN: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+bool isRunningInK8s = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("KUBERNETES_SERVICE_HOST"));
+Console.WriteLine("[SensorRegistry] CONF: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 // Add services to the container.
 
@@ -18,7 +18,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IKubernetes>(new Kubernetes(config));
+if (isRunningInK8s)
+{
+    var config = KubernetesClientConfiguration.InClusterConfig();
+    builder.Services.AddSingleton<IKubernetes>(new Kubernetes(config));
+    builder.Services.AddHostedService<SensorStatusWorker>();
+    Console.WriteLine("SensorRegistry Running in K8s: Kubernetes and Background Services enabled.");
+}
+else
+{
+    builder.Services.AddSingleton<IKubernetes?>(sp => null);
+    Console.WriteLine("[SensorRegistry] Running locally: K8s and Background Services disabled.");
+}
 
 builder.Services.AddScoped<ISensorService, SensorService>();
 builder.Services.AddHostedService<SensorStatusWorker>();

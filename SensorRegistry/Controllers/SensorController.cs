@@ -34,7 +34,11 @@ namespace SensorRegistry.Controllers
                 _logger.LogInformation($"[SensorRegistry] Sensor Registered: {data.Id}");
 
                 return Ok("[SensorRegistry] Sensor Registered");
-            }catch(Exception ex)
+            }catch(InvalidOperationException ex)
+            {
+                return StatusCode(409, ex.Message);
+            }
+            catch(Exception ex)
             {
                 _logger.LogError(ex, "[SensorRegistry] Couldnt register new sensor");
 

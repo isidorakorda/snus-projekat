@@ -15,7 +15,7 @@ namespace SensorRegistry.Services
         private readonly IKubernetes _k8s;
         private readonly ILogger<SensorService> _logger;
 
-        public SensorService(SensorDbContext context, IKubernetes k8s, ILogger<SensorService> logger)
+        public SensorService(SensorDbContext context, IKubernetes? k8s, ILogger<SensorService> logger)
         {
             _context = context;
             _k8s = k8s;
@@ -24,6 +24,11 @@ namespace SensorRegistry.Services
 
         public bool AddSensor(SensorRegistrationDTO data)
         {
+            if(_context.Sensors.Find(data.Id) != null)
+            {
+                throw new InvalidOperationException($"[SensorRegistry] Sensor ID already exists");
+            }
+
             Sensor sensor = new Sensor
             {
                 Id = data.Id,
@@ -67,6 +72,12 @@ namespace SensorRegistry.Services
 
         public async Task ShutDownAndStartPod(Guid id)
         {
+            if(_k8s == null)
+            {
+                _logger.LogWarning($"[SensorRegistry] K8s client not available. Skipping pod shutdown for {id}");
+                return;
+            }
+
             var pods = await _k8s.CoreV1.ListNamespacedPodAsync("sensors", labelSelector: $"sensorId={id}");
             var podName = pods.Items.FirstOrDefault()?.Metadata.Name;
 
