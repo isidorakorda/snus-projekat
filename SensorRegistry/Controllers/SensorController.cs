@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SensorRegistry.DTOs;
+using SensorRegistry.Features.Commands;
+using SensorRegistry.Features.Queries;
 using SensorRegistry.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace SensorRegistry.Controllers
 {
@@ -8,17 +12,19 @@ namespace SensorRegistry.Controllers
     [ApiController]
     public class SensorController : ControllerBase
     {
-        private readonly ISensorService _service;
+        private readonly IK8Service _service;
+        private readonly IMediator _mediator;
         private ILogger<SensorController> _logger;
 
-        public SensorController(ISensorService service, ILogger<SensorController> logger)
+        public SensorController(IK8Service service, ILogger<SensorController> logger, IMediator mediator)
         {
             _service = service;
             _logger = logger;
+            _mediator = mediator;
         }
 
         [HttpPost("register")]
-        public IActionResult RegisterSensor([FromBody] SensorRegistrationDTO data)
+        public async Task<IActionResult> RegisterSensor([FromBody] SensorRegistrationDTO data, CancellationToken token)
         {
             if(!ModelState.IsValid)
             {
@@ -27,13 +33,13 @@ namespace SensorRegistry.Controllers
 
             try
             {
-                bool added = _service.AddSensor(data);
+                bool added = await _mediator.Send(new AddSensorCommand(data), token);
 
                 if (!added) throw new Exception();
 
                 _logger.LogInformation($"[SensorRegistry] Sensor Registered: {data.Id}");
-
                 return Ok("[SensorRegistry] Sensor Registered");
+
             }catch(InvalidOperationException ex)
             {
                 return StatusCode(409, ex.Message);
@@ -48,9 +54,9 @@ namespace SensorRegistry.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSensors([FromQuery] bool? isActive)
+        public async Task<IActionResult> GetAllSensors([FromQuery] bool? isActive, CancellationToken token)
         {
-            List<SensorDTO> sensors = _service.GetAll(isActive);
+            List<SensorDTO> sensors = await _mediator.Send(new GetAllSensorsQuery(isActive), token);
 
             return Ok(sensors);
         }

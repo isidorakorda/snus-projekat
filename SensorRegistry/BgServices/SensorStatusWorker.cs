@@ -1,15 +1,21 @@
-﻿using SensorRegistry.Services.Interfaces;
+﻿using MediatR;
+using SensorRegistry.Features.Commands;
+using SensorRegistry.Features.Handlers;
+using SensorRegistry.Features.Queries;
+using SensorRegistry.Models;
+using SensorRegistry.Services;
+using SensorRegistry.Services.Interfaces;
 
 namespace SensorRegistry.BgServices
 {
     public class SensorStatusWorker : BackgroundService
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<SensorStatusWorker> _logger;
 
-        public SensorStatusWorker(IServiceProvider serviceProvider, ILogger<SensorStatusWorker> logger)
+        public SensorStatusWorker(IServiceScopeFactory scopeFactory, ILogger<SensorStatusWorker> logger)
         {
-            _serviceProvider = serviceProvider;
+            _scopeFactory = scopeFactory;
             _logger = logger;
         }
 
@@ -21,23 +27,28 @@ namespace SensorRegistry.BgServices
             {
                 try
                 {
-                    using (var scope = _serviceProvider.CreateScope())
+                    using (IServiceScope scope = _scopeFactory.CreateScope())
                     {
-                        var service = scope.ServiceProvider.GetRequiredService<ISensorService>();
+                        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        ISensorLifecycleService sensorLifecycleService = scope.ServiceProvider.GetRequiredService<ISensorLifecycleService>();
+
                         _logger.LogInformation("[SensorRegistry] Starting check for faulty sensors");
+                        DateTime timeout = DateTime.UtcNow.AddSeconds(-10);
 
-                        try
+                        List<Sensor> sensors = await mediator.Send(new GetFaultySensorsQuery(timeout), stoppingToken);
+                        List<Guid> faultyIds = sensors.Select(s => s.Id).ToList();
+
+                        if (faultyIds.Any())
                         {
-                            await service.DeactivateFaultySensors();
-                            _logger.LogInformation("[SensorRegistry] Checked for faulty sensors");
-
+                            await sensorLifecycleService.DeactivateSensorsAsync(faultyIds, stoppingToken);
+                            _logger.LogInformation($"[SensorRegistry] Successfully processed {faultyIds.Count} faulty sensors");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            _logger.LogError(ex, "[SensorRegistry] Error occurred while checking faulty sensors");
+                            _logger.LogInformation("[SensorRegistry] No faulty sensors found");
                         }
-
                     }
+
                 }
                 catch (Exception ex)
                 {
