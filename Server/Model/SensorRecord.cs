@@ -8,6 +8,6 @@
         public int MessageId { get; set; }
         public DateTime Timestamp { get; set; }
         public int AlarmPriority { get; set; }
-        public bool isConsensus { get; set; } = false;
+        public bool IsConsensus { get; set; } = false;
     }
 }
