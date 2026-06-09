@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 
 metadata:
   name: postgres-pvc
-  namespace: db
+  namespace: backend
   
 spec:
   accessModes:
