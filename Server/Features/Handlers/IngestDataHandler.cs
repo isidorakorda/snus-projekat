@@ -41,6 +41,7 @@ namespace Server.Features.Handlers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"[ Ingestion ] Error occured while saving measurements for sensors {dto.SensorId}");
+                return false;
             }
         }
 
