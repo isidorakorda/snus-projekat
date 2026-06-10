@@ -8,5 +8,6 @@ namespace SensorRegistry.Data
         public SensorDbContext(DbContextOptions<SensorDbContext> options) : base(options) { }
 
         public DbSet<Sensor> Sensors { get; set; }
+        public DbSet<SensorRecord> SensorRecords { get; set; }
     }
 }

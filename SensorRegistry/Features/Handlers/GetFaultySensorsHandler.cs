@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SensorRegistry.Features.Handlers
 {
-    public class GetFaultySensorsHandler : IRequestHandler<GetFaultySensorsQuery, List<Sensor>>
+    public class GetFaultySensorsHandler : IRequestHandler<GetFaultySensorsQuery, List<Guid>>
     {
         private readonly SensorDbContext _context;
 
@@ -15,10 +15,18 @@ namespace SensorRegistry.Features.Handlers
             _context = context;
         }
 
-        public async Task<List<Sensor>> Handle(GetFaultySensorsQuery request, CancellationToken cancellationToken)
+        public async Task<List<Guid>> Handle(GetFaultySensorsQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Sensors
-                .Where(s => s.IsActive && s.DateTimeOfRegistration < request.Timeout)
+            List<Guid> sensorIds = request.Sensors
+                .Where(s => s.IsActive)
+                .Select(s => s.Id)
+                .ToList();
+
+            return await _context.SensorRecords
+                .Where(record => sensorIds.Contains(record.SensorId))
+                .GroupBy(record => record.SensorId)
+                .Where(r => r.Max(record => record.Timestamp) < request.Timeout)
+                .Select(r => r.Key)
                 .ToListAsync(cancellationToken);
         }
     }

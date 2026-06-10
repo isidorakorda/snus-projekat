@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SensorRegistry.DTOs;
 using SensorRegistry.Features.Commands;
 using SensorRegistry.Features.Handlers;
 using SensorRegistry.Features.Queries;
@@ -35,8 +36,8 @@ namespace SensorRegistry.BgServices
                         _logger.LogInformation("[SensorRegistry] Starting check for faulty sensors");
                         DateTime timeout = DateTime.UtcNow.AddSeconds(-10);
 
-                        List<Sensor> sensors = await mediator.Send(new GetFaultySensorsQuery(timeout), stoppingToken);
-                        List<Guid> faultyIds = sensors.Select(s => s.Id).ToList();
+                        List<SensorDTO> sensors = await mediator.Send(new GetAllSensorsQuery(true), stoppingToken);
+                        List<Guid> faultyIds = await mediator.Send(new GetFaultySensorsQuery(sensors, timeout), stoppingToken);
 
                         if (faultyIds.Any())
                         {
