@@ -6,7 +6,7 @@ using Server.Features.Commands;
 namespace Server.Controller
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/ingestion")]
     public class IngestionController : ControllerBase
     {
         private readonly IMediator mediator;
