@@ -3,19 +3,16 @@ using System.Security.Cryptography;
 
 
 var client = new HttpClient();
+object lck = new object();
 string gatewayUrl = "https://localhost:7000";
 
-
-Console.WriteLine("=================================================");
 Console.WriteLine("   SIMULATOR...     ");
-Console.WriteLine("=================================================\n");
 
 var sensorTasks = Enumerable.Range(1, 5)
     .Select(index => StartSingleSensorAsync(client, gatewayUrl, index))
     .ToList();
 
 await Task.WhenAll(sensorTasks);
-
 
 async Task StartSingleSensorAsync(HttpClient httpClient, string url, int instanceNumber)
 {
@@ -75,16 +72,47 @@ async Task StartSingleSensorAsync(HttpClient httpClient, string url, int instanc
         {
             var response = await httpClient.PostAsJsonAsync($"{url}/api/ingestion/ingest", ingestionPayload);
 
-            string alertTag = alarmPriority > 0 ? $"[ALARM P{alarmPriority}] " : "";
-            Console.WriteLine($"[Sensor {instanceNumber}] {alertTag}Sent: {simulatedTemp}°C | Status: {response.StatusCode}");
+            if (alarmPriority > 0)
+                LogAlarmInColor(ingestionPayload.SensorId, ingestionPayload.Temperature, alarmPriority);
+            else
+            {
+                lock (lck)
+                {
+                    Console.WriteLine($"[Sensor {instanceNumber}] Sent: {simulatedTemp}°C | Status: {response.StatusCode}");
+                }
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Sensor {instanceNumber}] Error: {ex.Message}");
+            lock (lck)
+            {
+                Console.WriteLine($"[Sensor {instanceNumber}] Error: {ex.Message}");
+            }
         }
 
-        await Task.Delay(TimeSpan.FromSeconds(10));
+        await Task.Delay(TimeSpan.FromSeconds(5));
     }
 }
 
+void LogAlarmInColor(Guid sensorId, double temp, int priority)
+{
+    lock (lck)
+    {
+        var originalColor = Console.ForegroundColor;
+
+        Console.ForegroundColor = priority switch
+        {
+            1 => ConsoleColor.Yellow,
+            2 => ConsoleColor.DarkYellow,
+            3 => ConsoleColor.Red,
+            _ => originalColor
+        };
+
+        Console.WriteLine($"[ ALARM - PRIORITY {priority}] : Sensor: {sensorId} | Temperature: {temp}");
+        Console.ForegroundColor = originalColor;
+    }
+}
+    
+
 enum DataQuality { GOOD, BAD, UNCERTAIN }
+
