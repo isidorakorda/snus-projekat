@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: sensor-container
-        image: sensor-simulation/your-image:tag
+        image: sensor-simulation:latest
         env:
           - name: GATEWAY_URL
             value: "http://api-gateway-service.backend.svc.cluster.local"
