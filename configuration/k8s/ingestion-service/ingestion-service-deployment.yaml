@@ -2,12 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: sensor-registry
+  name: ingestion-service
   namespace: backend
 
   labels:
-    app: sensor-registry
-    group: sensor-registry
+    app: ingestion-service
+    group: ingestion-service
 
 
 spec:
@@ -15,24 +15,23 @@ spec:
 
   selector:
     matchLabels:
-      group: sensor-registry
-
+      group: ingestion-service
   template:
     metadata:
       labels: 
-        app: sensor-registry
-        group: sensor-registry
+        app: ingestion-service
+        group: ingestion-service
 
     spec:
       containers:
-        - name: sensor-registry
-          image: sensor-registry:latest
+        - name: ingestion-service
+          image: ingestion-service:latest
           imagePullPolicy: Never
           
           ports:
-          - containerPort: 8082
+          - containerPort: 8081
           env:
           - name: ASPNETCORE_URLS
-            value: "http://+:8082"
+            value: "http://+:8081"
           - name: ConnectionStrings__DefaultConnection
             value: "Host=postgres;Port=5432;Database=default_db;Username=admin;Password=admin;SSL Mode=Disable"

@@ -2,16 +2,16 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: sensor-registry
+  name: ingestion-service
   namespace: backend
   labels:
-    group: sensor-registry
+    group: ingestion-service
 
 spec:
   type: ClusterIP
   selector:
-    group: sensor-registry
+    group: ingestion-service
   ports:
     - protocol: TCP
-      port: 82
-      targetPort: 8082
+      port: 81
+      targetPort: 8081

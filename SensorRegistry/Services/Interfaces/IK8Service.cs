@@ -5,7 +5,7 @@ namespace SensorRegistry.Services.Interfaces
 {
     public interface IK8Service
     {
-        Task ShutDownAndStartPod(Guid id);
+        Task ShutDownAndStartPod(string id);
 
     }
 }

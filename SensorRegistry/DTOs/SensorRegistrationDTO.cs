@@ -14,5 +14,8 @@ namespace SensorRegistry.DTOs
         [Required(ErrorMessage = "[SensorRegistry] Public key is required")]
         [StringLength(500, MinimumLength = 32, ErrorMessage = "[SensorRegistry] Public key length must be between 32 and 500 chars")]
         public string PublicKey { get; set; }
+
+        [Required(ErrorMessage = "[SensorRegistry] Pod Name is required")]
+        public string PodName { get; set; }
     }
 }

@@ -30,7 +30,8 @@ namespace SensorRegistry.Features.Handlers
                 PublicKey = command.Data.PublicKey,
                 IsActive = true,
                 IsMalicious = false,
-                DateTimeOfRegistration = DateTime.UtcNow
+                DateTimeOfRegistration = DateTime.UtcNow,
+                PodName = command.Data.PodName
             };
 
             try

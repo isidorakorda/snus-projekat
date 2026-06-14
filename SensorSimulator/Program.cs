@@ -1,18 +1,23 @@
 ﻿using System.Net.Http.Json;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography; 
 
 
 var client = new HttpClient();
 object lck = new object();
-string gatewayUrl = "https://localhost:7000";
+string gatewayUrl = Environment.GetEnvironmentVariable("GATEWAY_URL") ?? "https://localhost:7000";
+string podName = Environment.GetEnvironmentVariable("POD_NAME") ?? "sensor-0";
 
 Console.WriteLine("   SIMULATOR...     ");
 
-var sensorTasks = Enumerable.Range(1, 5)
+/*var sensorTasks = Enumerable.Range(1, 5)
     .Select(index => StartSingleSensorAsync(client, gatewayUrl, index))
     .ToList();
 
-await Task.WhenAll(sensorTasks);
+await Task.WhenAll(sensorTasks);*/
+
+
+await StartSingleSensorAsync(client, gatewayUrl, int.Parse(podName.Split('-')[1]));
 
 async Task StartSingleSensorAsync(HttpClient httpClient, string url, int instanceNumber)
 {
@@ -29,7 +34,8 @@ async Task StartSingleSensorAsync(HttpClient httpClient, string url, int instanc
     {
         Id = mySensorId,
         Quality = DataQuality.GOOD, 
-        PublicKey = publicKeyBase64 
+        PublicKey = publicKeyBase64, 
+        PodName = podName
     };
 
     try

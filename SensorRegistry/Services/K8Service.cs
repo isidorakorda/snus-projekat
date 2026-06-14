@@ -21,7 +21,7 @@ namespace SensorRegistry.Services
         }
 
 
-        public async Task ShutDownAndStartPod(Guid id)
+        public async Task ShutDownAndStartPod(string id)
         {
             if(_k8s == null)
             {
@@ -29,7 +29,7 @@ namespace SensorRegistry.Services
                 return;
             }
 
-            V1PodList pods = await _k8s.CoreV1.ListNamespacedPodAsync("sensors", labelSelector: $"sensorId={id}");
+            V1PodList pods = await _k8s.CoreV1.ListNamespacedPodAsync("sensors", labelSelector: $"sensor-{id}");
             var podName = pods.Items.FirstOrDefault()?.Metadata.Name;
 
             if (podName != null){
