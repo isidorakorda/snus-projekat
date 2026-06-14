@@ -68,3 +68,14 @@ obj/
 *.suo
 appsettings.json
 /.vs
+/SensorRegistry/appsettings.Development.json
+/SNUS.slnx
+/ApiGateway/appsettings.Development.json
+/.vs
+/.vs/SNUS.slnx/v18/.futdcache.v2
+/.vs/SNUS.slnx/v18/.suo
+/.vs/SNUS.slnx/v18/DocumentLayout.backup.json
+/.vs/SNUS.slnx/v18/DocumentLayout.json
+/.vs/SNUS.slnx/v18/.wsuo
+/Server/appsettings.Development.json
+/Server/appsettings.json
