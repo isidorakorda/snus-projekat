@@ -3,4 +3,5 @@
   <Project Path="SensorRegistry/SensorRegistry.csproj" Id="b940af2f-205c-4479-92b1-bfff1f32dd90" />
   <Project Path="SensorSimulator/SensorSimulator.csproj" Id="f6444d6d-0e1c-4f42-b9ac-58b178ce1142" />
   <Project Path="Server/Server.csproj" />
+  <Project Path="ConsensusService/ConsensusService.csproj" />
 </Solution>
