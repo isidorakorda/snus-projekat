@@ -25,6 +25,9 @@ namespace SensorRegistry.Models
         public DateTime? DeactivationTime { get; set; }
 
         [Required]
-        public string PublicKey { get; set; } 
+        public string PublicKey { get; set; }
+
+        [Required]
+        public string PodName { get; set; }
     }
 }

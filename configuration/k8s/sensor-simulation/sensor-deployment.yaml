@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: sensor
+  namespace: sensors
+
+spec:
+  serviceName: "sensor-headless"
+  replicas: 5
+
+  selector:
+    matchLabels:
+      app: sensor
+
+  template:
+    metadata:
+      labels:
+        app: sensor
+
+    spec:
+      containers:
+      - name: sensor-container
+        image: sensor-simulation/your-image:tag
+        env:
+          - name: GATEWAY_URL
+            value: "http://api-gateway-service.backend.svc.cluster.local"
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name

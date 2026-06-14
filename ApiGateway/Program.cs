@@ -25,8 +25,14 @@ var app = builder.Build();
 
 app.UseRateLimiter();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.MapReverseProxy();
+app.MapReverseProxy(proxyPipeline =>
+{
+    proxyPipeline.Use((context, next) =>
+    {
+        return next();
+    });
+});
 
 app.Run();

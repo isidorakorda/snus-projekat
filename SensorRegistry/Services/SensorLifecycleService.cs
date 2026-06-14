@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SensorRegistry.Features.Commands;
+using SensorRegistry.Features.Queries;
 using SensorRegistry.Services.Interfaces;
 
 namespace SensorRegistry.Services
@@ -25,7 +26,9 @@ namespace SensorRegistry.Services
             {
                 try
                 {
-                    await _k8sService.ShutDownAndStartPod(id);
+                    string podName = await _mediator.Send(new GetSensorQuery(id), token);
+                    await _k8sService.ShutDownAndStartPod(podName);
+
                     _logger.LogInformation($"[SensorRegistry] Successfully shut down pod for sensor: {id}");
                 }
                 catch (Exception ex)

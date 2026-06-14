@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: api-gateway
+  namespace: backend
+
+  labels:
+    app: api-gateway
+    group: api-gateway
+
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      group: api-gateway
+  template:
+    metadata:
+      labels: 
+        app: api-gateway
+        group: api-gateway
+
+    spec:
+      containers:
+        - name: api-gateway
+          image: api-gateway:latest
+          ports:
+          - containerPort: 8080
+          env:
+          - name: ASPNETCORE_URLS
+            value: "http://+:8080"

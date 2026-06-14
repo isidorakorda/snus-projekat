@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ingestion-service
+  namespace: backend
+
+  labels:
+    app: ingestion-service
+    group: ingestion-service
+
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      group: ingestion-service
+  template:
+    metadata:
+      labels: 
+        app: ingestion-service
+        group: ingestion-service
+
+    spec:
+      containers:
+        - name: ingestion-service
+          image: ingestion-service:latest
+          ports:
+          - containerPort: 8082
+          env:
+          - name: ASPNETCORE_URLS
+            value: "http://+:8082"
