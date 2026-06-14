@@ -8,9 +8,6 @@ using SensorRegistry.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-bool isRunningInK8s = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("KUBERNETES_SERVICE_HOST"));
-Console.WriteLine("[SensorRegistry] CONF: " + builder.Configuration.GetConnectionString("DefaultConnection"));
-
 
 builder.Services.AddMediatR(cfg => {
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
@@ -19,6 +16,9 @@ builder.Services.AddMediatR(cfg => {
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+bool isRunningInK8s = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("KUBERNETES_SERVICE_HOST"));
+Console.WriteLine("[SensorRegistry] CONF: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 if (isRunningInK8s)
 {
@@ -56,5 +56,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SensorDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.Run();

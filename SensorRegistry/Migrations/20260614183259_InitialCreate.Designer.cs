@@ -12,7 +12,7 @@ using SensorRegistry.Data;
 namespace SensorRegistry.Migrations
 {
     [DbContext(typeof(SensorDbContext))]
-    [Migration("20260607141826_InitialCreate")]
+    [Migration("20260614183259_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -46,6 +46,10 @@ namespace SensorRegistry.Migrations
                     b.Property<DateTime?>("LastSeen")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("PodName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasColumnType("text");
@@ -56,6 +60,35 @@ namespace SensorRegistry.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sensors");
+                });
+
+            modelBuilder.Entity("SensorRegistry.Models.SensorRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AlarmPriority")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsConsensus")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SensorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SensorRecords");
                 });
 #pragma warning restore 612, 618
         }

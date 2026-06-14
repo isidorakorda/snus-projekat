@@ -13,5 +13,5 @@ spec:
     group: sensor-registry
   ports:
     - protocol: TCP
-      port: 81
-      targetPort: 8081
+      port: 82
+      targetPort: 8082

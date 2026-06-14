@@ -22,9 +22,11 @@ spec:
       containers:
       - name: sensor-container
         image: sensor-simulation:latest
+        imagePullPolicy: Never
+        
         env:
           - name: GATEWAY_URL
-            value: "http://api-gateway-service.backend.svc.cluster.local"
+            value: "http://api-gateway.backend.svc.cluster.local:80"
           - name: POD_NAME
             valueFrom:
               fieldRef:

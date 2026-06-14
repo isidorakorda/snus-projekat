@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 var client = new HttpClient();
 object lck = new object();
 string gatewayUrl = Environment.GetEnvironmentVariable("GATEWAY_URL") ?? "https://localhost:7000";
-string podName = Environment.GetEnvironmentVariable("POD_NAME") ?? "sensor-unkown";
+string podName = Environment.GetEnvironmentVariable("POD_NAME") ?? "sensor-0";
 
 Console.WriteLine("   SIMULATOR...     ");
 

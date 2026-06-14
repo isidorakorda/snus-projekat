@@ -26,8 +26,16 @@ spec:
       containers:
         - name: api-gateway
           image: api-gateway:latest
+          imagePullPolicy: Never
+          
           ports:
           - containerPort: 8080
           env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Development"
           - name: ASPNETCORE_URLS
             value: "http://+:8080"
+          - name: ReverseProxy__Clusters__ingestion-cluster__Destinations__dest1__Address
+            value: "http://ingestion-service.backend.svc.cluster.local:81/"
+          - name: ReverseProxy__Clusters__registry-cluster__Destinations__dest1__Address
+            value: "http://sensor-registry.backend.svc.cluster.local:82/"

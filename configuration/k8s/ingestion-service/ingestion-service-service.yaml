@@ -13,5 +13,5 @@ spec:
     group: ingestion-service
   ports:
     - protocol: TCP
-      port: 82
-      targetPort: 8082 
+      port: 81
+      targetPort: 8081

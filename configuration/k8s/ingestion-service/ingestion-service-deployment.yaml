@@ -26,8 +26,12 @@ spec:
       containers:
         - name: ingestion-service
           image: ingestion-service:latest
+          imagePullPolicy: Never
+          
           ports:
-          - containerPort: 8082
+          - containerPort: 8081
           env:
           - name: ASPNETCORE_URLS
-            value: "http://+:8082"
+            value: "http://+:8081"
+          - name: ConnectionStrings__DefaultConnection
+            value: "Host=postgres;Port=5432;Database=default_db;Username=admin;Password=admin;SSL Mode=Disable"
