@@ -26,8 +26,7 @@ namespace Server.Features.Handlers
                 Temperature = dto.Temperature,
                 MessageId = dto.MessageId,
                 Timestamp = dto.Timestamp,
-                AlarmPriority = dto.AlarmPriority,
-                IsConsensus = false
+                AlarmPriority = dto.AlarmPriority
             };
 
             if (record.AlarmPriority > 0)
