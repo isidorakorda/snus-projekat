@@ -9,5 +9,7 @@ namespace Server.Data
         public ServerDbContext(DbContextOptions<ServerDbContext> options) : base(options) { }
 
         public DbSet<SensorRecord> SensorRecords { get; set; }
+        public DbSet<Sensor> Sensors { get; set; }
+        public DbSet<Consensus> ConsensusValues { get; set; }
     }
 }
