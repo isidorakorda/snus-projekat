@@ -5,27 +5,44 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using SensorRegistry.Data;
+using Server.Data;
 
 #nullable disable
 
-namespace SensorRegistry.Migrations
+namespace Server.Migrations
 {
-    [DbContext(typeof(SensorDbContext))]
-    [Migration("20260614141030_UpdateSchema")]
-    partial class UpdateSchema
+    [DbContext(typeof(ServerDbContext))]
+    [Migration("20260615191903_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SensorRegistry.Models.Sensor", b =>
+            modelBuilder.Entity("Server.Model.Consensus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConsensusValues");
+                });
+
+            modelBuilder.Entity("Server.Model.Sensor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,11 +57,12 @@ namespace SensorRegistry.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsMalicious")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime?>("LastSeen")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PodName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PublicKey")
                         .IsRequired()
@@ -58,7 +76,7 @@ namespace SensorRegistry.Migrations
                     b.ToTable("Sensors");
                 });
 
-            modelBuilder.Entity("SensorRegistry.Models.SensorRecord", b =>
+            modelBuilder.Entity("Server.Model.SensorRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,9 +84,6 @@ namespace SensorRegistry.Migrations
 
                     b.Property<int>("AlarmPriority")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsConsensus")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("MessageId")
                         .HasColumnType("integer");

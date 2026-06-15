@@ -57,6 +57,10 @@ namespace Server.Migrations
                     b.Property<DateTime?>("LastSeen")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("PodName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasColumnType("text");

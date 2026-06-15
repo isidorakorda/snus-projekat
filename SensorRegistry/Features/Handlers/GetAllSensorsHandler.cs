@@ -29,11 +29,11 @@ namespace SensorRegistry.Features.Handlers
                 Id = model.Id,
                 Quality = model.Quality,
                 IsActive = model.IsActive,
-                IsMalicious = model.IsMalicious,
                 DateTimeOfRegistration = model.DateTimeOfRegistration,
                 LastSeen = model.LastSeen,
                 DeactivationTime = model.DeactivationTime,
-                PublicKey = model.PublicKey
+                PublicKey = model.PublicKey,
+                PodName = model.PodName,
             }).ToListAsync(token);
 
         }
