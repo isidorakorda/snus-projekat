@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SensorRegistry.Migrations
+namespace Server.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -11,6 +11,19 @@ namespace SensorRegistry.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ConsensusValues",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Temperature = table.Column<double>(type: "double precision", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConsensusValues", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "SensorRecords",
                 columns: table => new
@@ -20,8 +33,7 @@ namespace SensorRegistry.Migrations
                     Temperature = table.Column<double>(type: "double precision", nullable: false),
                     MessageId = table.Column<int>(type: "integer", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AlarmPriority = table.Column<int>(type: "integer", nullable: false),
-                    IsConsensus = table.Column<bool>(type: "boolean", nullable: false)
+                    AlarmPriority = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,7 +47,6 @@ namespace SensorRegistry.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Quality = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    IsMalicious = table.Column<bool>(type: "boolean", nullable: false),
                     DateTimeOfRegistration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastSeen = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     DeactivationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -51,6 +62,9 @@ namespace SensorRegistry.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ConsensusValues");
+
             migrationBuilder.DropTable(
                 name: "SensorRecords");
 

@@ -11,8 +11,6 @@ namespace SensorRegistry.DTOs
 
         public bool IsActive { get; set; } = true;
 
-        public bool IsMalicious { get; set; } = false;
-
         public DateTime DateTimeOfRegistration { get; set; } = DateTime.UtcNow;
 
         public DateTime? LastSeen { get; set; }
@@ -20,5 +18,7 @@ namespace SensorRegistry.DTOs
         public DateTime? DeactivationTime { get; set; }
 
         public string PublicKey { get; set; }
+
+        public string PodName { get; set; }
     }
 }

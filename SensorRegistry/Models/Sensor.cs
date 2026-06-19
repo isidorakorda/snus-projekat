@@ -15,9 +15,6 @@ namespace SensorRegistry.Models
         public bool IsActive { get; set; } = true;
 
         [Required]
-        public bool IsMalicious { get; set; } = false;
-
-        [Required]
         public DateTime DateTimeOfRegistration { get; set; } = DateTime.UtcNow;
 
         public DateTime? LastSeen { get; set; } 

@@ -23,5 +23,8 @@ namespace Server.Model
 
         [Required]
         public string PublicKey { get; set; }
+
+        [Required]
+        public string PodName { get; set; }
     }
 }

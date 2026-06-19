@@ -11,5 +11,6 @@ namespace ConsensusService.Model
         public DateTime? LastSeen { get; set; }
         public DateTime? DeactivationTime { get; set; }
         public string PublicKey { get; set; }
+        public string PodName { get; set; }
     }
 }

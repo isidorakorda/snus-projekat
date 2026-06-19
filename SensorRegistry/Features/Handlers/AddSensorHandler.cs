@@ -29,7 +29,6 @@ namespace SensorRegistry.Features.Handlers
                 Quality = command.Data.Quality,
                 PublicKey = command.Data.PublicKey,
                 IsActive = true,
-                IsMalicious = false,
                 DateTimeOfRegistration = DateTime.UtcNow,
                 PodName = command.Data.PodName
             };
