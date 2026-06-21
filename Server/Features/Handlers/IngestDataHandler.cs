@@ -2,6 +2,7 @@
 using Server.Data;
 using Server.Features.Commands;
 using Server.Model;
+using Server.Service.IService;
 
 namespace Server.Features.Handlers
 {
@@ -9,11 +10,13 @@ namespace Server.Features.Handlers
     {
         private readonly ServerDbContext _context;
         private readonly ILogger<IngestDataHandler> _logger;
+        private readonly IAlarmPublisher _alarmPublisher;
 
-        public IngestDataHandler(ServerDbContext context, ILogger<IngestDataHandler> logger)
+        public IngestDataHandler(ServerDbContext context, ILogger<IngestDataHandler> logger, IAlarmPublisher publisher)
         {
             _context = context;
             _logger = logger;
+            _alarmPublisher = publisher;
         }
 
         public async Task<bool> Handle(IngestDataCommand command, CancellationToken token)
@@ -30,7 +33,11 @@ namespace Server.Features.Handlers
             };
 
             if (record.AlarmPriority > 0)
-                LogAlarmInColor(record.SensorId, record.Temperature, record.AlarmPriority);
+            {
+                string message = $"[ ALARM - PRIORITY {record.AlarmPriority}] : Sensor: {record.SensorId} | Temperature: {record.Temperature}";
+                LogAlarmInColor(message, record.AlarmPriority);
+                await _alarmPublisher.PublishAlarmAsync(message);
+            }
 
             try
             {
@@ -44,7 +51,7 @@ namespace Server.Features.Handlers
             }
         }
 
-        private void LogAlarmInColor(Guid sensorId, double temp, int priority)
+        private void LogAlarmInColor(string message, int priority)
         {
             var originalColor = Console.ForegroundColor;
 
@@ -56,7 +63,7 @@ namespace Server.Features.Handlers
                 _ => originalColor
             };
 
-            Console.WriteLine($"[ ALARM - PRIORITY {priority}] : Sensor: {sensorId} | Temperature: {temp}");
+            Console.WriteLine(message);
             Console.ForegroundColor = originalColor;
         }
     }
