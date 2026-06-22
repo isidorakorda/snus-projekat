@@ -4,7 +4,7 @@ namespace NotificationService
 {
     public class AlarmHub : Hub
     {
-        public async Task InitSub(string username, string password)
+        public async Task InitSub()
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, "AlarmNotifications");
         }
