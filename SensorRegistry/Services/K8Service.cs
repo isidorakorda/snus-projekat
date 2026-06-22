@@ -29,13 +29,8 @@ namespace SensorRegistry.Services
                 return;
             }
 
-            /*V1PodList pods = await _k8s.CoreV1.ListNamespacedPodAsync("sensors", labelSelector: $"sensor-{id}");
-            var podName = pods.Items.FirstOrDefault()?.Metadata.Name;
-
-            if (podName != null){}*/
             _logger.LogInformation($"[SensorRegistry] Shutting down pod: sendorId={podName}");
             await _k8s.CoreV1.DeleteNamespacedPodAsync(podName, "sensors"); 
-            
         }
     }
 }

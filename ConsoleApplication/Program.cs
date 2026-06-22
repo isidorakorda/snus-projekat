@@ -77,11 +77,11 @@ namespace ConsoleApplication
                             {
                                 var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonResult);
                                 string prettyJson = System.Text.Json.JsonSerializer.Serialize(jsonDocument, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-                                Console.WriteLine($"[Console] HTTP Request successful (Sensors List):\n{prettyJson}");
+                                Console.WriteLine($"[Console] HTTP Request successful:\n{prettyJson}");
                             }
                             catch
                             {
-                                Console.WriteLine($"[Console] HTTP Request successful:\n{jsonResult}");
+                                Console.WriteLine($"[Console] HTTP Request unsuccessful:\n{jsonResult}");
                             }
                         }
                         else
