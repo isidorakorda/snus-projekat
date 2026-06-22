@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ConsensusService": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="ApiGateway/ApiGateway.csproj" Id="c61e6520-6dde-4bd2-8b1d-78cde06aabf7" />
+  <Project Path="ConsoleApplication/ConsoleApplication.csproj" Id="4c27613b-a12f-48d6-bb30-8b2ab1c917e1" />
+  <Project Path="NotificationService/NotificationService.csproj" Id="0e070583-1488-4f38-a56b-4c3dfdeced2f" />
   <Project Path="SensorRegistry/SensorRegistry.csproj" Id="b940af2f-205c-4479-92b1-bfff1f32dd90" />
   <Project Path="SensorSimulator/SensorSimulator.csproj" Id="f6444d6d-0e1c-4f42-b9ac-58b178ce1142" />
   <Project Path="Server/Server.csproj" />
