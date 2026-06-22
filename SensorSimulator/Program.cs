@@ -37,25 +37,34 @@ async Task StartSingleSensorAsync(HttpClient httpClient, string url, int instanc
         PublicKey = publicKeyBase64, 
         PodName = podName
     };
+    bool isRegistered = false;
 
-    try
+    while (!isRegistered)
     {
-        var registerResponse = await httpClient.PostAsJsonAsync($"{url}/api/sensor/register", registrationPayload);
-
-        if (!registerResponse.IsSuccessStatusCode)
+        try
         {
-            Console.WriteLine($"[Sensor {instanceNumber}] Interrupted registration. Status: {registerResponse.StatusCode}");
-            return;
-        }
-        Console.WriteLine($"[Sensor {instanceNumber}] Succesfully registrated (ID: {mySensorId.ToString().Substring(0, 8)}...)");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"[Sensor {instanceNumber}] Error: {ex.Message}");
-        return;
-    }
+            var registerResponse = await httpClient.PostAsJsonAsync($"{url}/api/sensor/register", registrationPayload);
 
-    await Task.Delay(new Random().Next(500, 3000));
+            if (registerResponse.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"[Sensor {instanceNumber}] Succesfully registrated (ID: {mySensorId.ToString().Substring(0, 8)}...)");
+                isRegistered = true;
+            }
+            else
+            {
+                Console.WriteLine($"[Sensor {instanceNumber}] Registration refused. Status: {registerResponse.StatusCode}. Retrying in 5s...");
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Sensor {instanceNumber}] Error: {ex.Message}");
+            await Task.Delay(TimeSpan.FromSeconds(5));
+        }
+    }
+    
+
+    
 
     int messageId = 1;
     var random = new Random();

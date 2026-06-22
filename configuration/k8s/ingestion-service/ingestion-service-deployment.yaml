@@ -35,3 +35,5 @@ spec:
             value: "http://+:8081"
           - name: ConnectionStrings__DefaultConnection
             value: "Host=postgres;Port=5432;Database=default_db;Username=admin;Password=admin;SSL Mode=Disable"
+          - name: ALARM_HUB_URL
+            value: "http://notification-service.backend.svc.cluster.local:84/alarmHub"

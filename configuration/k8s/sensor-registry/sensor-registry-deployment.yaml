@@ -24,6 +24,7 @@ spec:
         group: sensor-registry
 
     spec:
+      serviceAccountName: registry
       containers:
         - name: sensor-registry
           image: sensor-registry:latest

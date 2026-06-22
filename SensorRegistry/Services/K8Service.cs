@@ -21,21 +21,21 @@ namespace SensorRegistry.Services
         }
 
 
-        public async Task ShutDownAndStartPod(string id)
+        public async Task ShutDownAndStartPod(string podName)
         {
             if(_k8s == null)
             {
-                _logger.LogWarning($"[SensorRegistry] K8s client not available. Skipping pod shutdown for {id}");
+                _logger.LogWarning($"[SensorRegistry] K8s client not available. Skipping pod shutdown for {podName}");
                 return;
             }
 
-            V1PodList pods = await _k8s.CoreV1.ListNamespacedPodAsync("sensors", labelSelector: $"sensor-{id}");
+            /*V1PodList pods = await _k8s.CoreV1.ListNamespacedPodAsync("sensors", labelSelector: $"sensor-{id}");
             var podName = pods.Items.FirstOrDefault()?.Metadata.Name;
 
-            if (podName != null){
-                _logger.LogInformation($"[SensorRegistry] Shutting down pod: sendorId={id}");
-                await _k8s.CoreV1.DeleteNamespacedPodAsync(podName, "sensors"); 
-            }
+            if (podName != null){}*/
+            _logger.LogInformation($"[SensorRegistry] Shutting down pod: sendorId={podName}");
+            await _k8s.CoreV1.DeleteNamespacedPodAsync(podName, "sensors"); 
+            
         }
     }
 }

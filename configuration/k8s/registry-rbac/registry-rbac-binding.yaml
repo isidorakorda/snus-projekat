@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: allow-registry-manage-pods
+  namespace: sensors
+
+subjects:
+  - kind: ServiceAccount
+    name: registry
+    namespace: backend
+
+roleRef:
+  kind: Role
+  name: sensor-registry-pod-manager
+  apiGroup: rbac.authorization.k8s.io

@@ -24,7 +24,7 @@ if (isRunningInK8s)
 {
     var config = KubernetesClientConfiguration.InClusterConfig();
     builder.Services.AddSingleton<IKubernetes>(new Kubernetes(config));
-    builder.Services.AddHostedService<SensorStatusWorker>();
+    //builder.Services.AddHostedService<SensorStatusWorker>();
     Console.WriteLine("SensorRegistry Running in K8s: Kubernetes and Background Services enabled.");
 }
 else

@@ -34,7 +34,7 @@ namespace SensorRegistry.BgServices
                         ISensorLifecycleService sensorLifecycleService = scope.ServiceProvider.GetRequiredService<ISensorLifecycleService>();
 
                         _logger.LogInformation("[SensorRegistry] Starting check for faulty sensors");
-                        DateTime timeout = DateTime.UtcNow.AddSeconds(-10);
+                        DateTime timeout = DateTime.UtcNow.AddSeconds(-12);
 
                         List<SensorDTO> sensors = await mediator.Send(new GetAllSensorsQuery(true), stoppingToken);
                         List<Guid> faultyIds = await mediator.Send(new GetFaultySensorsQuery(sensors, timeout), stoppingToken);
