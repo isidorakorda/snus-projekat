@@ -27,7 +27,7 @@ namespace Server.Service
                 await _connection.StartAsync();
             }
 
-            await _connection.InvokeAsync("Alarm", message);
+            await _connection.InvokeAsync("SendAlarm", message);
         }
     }
 }

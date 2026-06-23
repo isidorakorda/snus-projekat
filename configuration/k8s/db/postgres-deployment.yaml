@@ -30,6 +30,16 @@ spec:
       containers:
         - name: snus-db
           image: postgres:16-alpine
+
+          readinessProbe:
+            exec:
+              command:
+                - "pg_isready"
+                - "-U"
+                - "admin" 
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
           ports:
             - containerPort: 5432
 
@@ -43,10 +53,13 @@ spec:
 
           volumeMounts:                 
             - name: postgres-storage               
-              mountPath: /var/lib/postgresql/data  
+              mountPath: /var/lib/postgresql/data
 
           resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
             limits:
-              memory: "256Mi"
+              memory: "1Gi"
               cpu: "500m"      
 

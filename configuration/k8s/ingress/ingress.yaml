@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: backend-ingress
+  namespace: backend
+
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "14400"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "14400"
+
+spec:
+  rules:
+    - http:
+        paths:
+        
+        - path: /alarmHub
+          pathType: Prefix
+          backend:
+            service:
+              name: notification-service
+              port:
+                number: 84
+
+        - path: /
+          pathType: Prefix
+          backend:
+            service: 
+              name: api-gateway
+              port:
+                number: 80

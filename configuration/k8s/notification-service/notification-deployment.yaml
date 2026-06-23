@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+
+metadata:
+  name: notification-service
+  namespace: backend
+
+  labels:
+    app: notification-service
+    group: notification-service
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      group: notification-service
+
+  template:
+    metadata:
+      labels:
+        app: notification-service
+        group: notification-service
+
+
+    spec:
+      containers:
+        - name: notification-service
+          image: notification-service:latest
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8084
+          
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8084"
