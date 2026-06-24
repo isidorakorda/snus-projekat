@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Server.DTO;
 using Server.Data;
 using Server.Features.Commands;
 using Server.Model;
@@ -36,7 +37,8 @@ namespace Server.Features.Handlers
             {
                 string message = $"[ ALARM - PRIORITY {record.AlarmPriority}] : Sensor: {record.SensorId} | Temperature: {record.Temperature}";
                 LogAlarmInColor(message, record.AlarmPriority);
-                await _alarmPublisher.PublishAlarmAsync(message);
+                var alarmDTO = new AlarmDTO(message, record.AlarmPriority);
+                await _alarmPublisher.PublishAlarmAsync(alarmDTO);
             }
 
             try

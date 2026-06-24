@@ -1,7 +1,9 @@
-﻿namespace Server.Service.IService
+﻿using Server.DTO;
+
+namespace Server.Service.IService
 {
     public interface IAlarmPublisher
     {
-        Task PublishAlarmAsync(string message);
+        Task PublishAlarmAsync(AlarmDTO dto);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using NotificationService.DTO;
 
 namespace NotificationService
 {
@@ -9,10 +10,10 @@ namespace NotificationService
             await Groups.AddToGroupAsync(Context.ConnectionId, "AlarmNotifications");
         }
 
-        public async Task SendAlarm(string message)
+        public async Task SendAlarm(AlarmDTO dto)
         {
-            Console.WriteLine($"[SERVER] sending alarm: {message}");
-            await Clients.Group("AlarmNotifications").SendAsync("Alarm", message);
+            Console.WriteLine($"[SERVER] sending alarm: {dto.Message}");
+            await Clients.Group("AlarmNotifications").SendAsync("Alarm", dto);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using ConsoleApplication.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,26 +19,55 @@ namespace ConsoleApplication
             Console.WriteLine("Console Application is up and running...");
             var cookies = new CookieContainer();
 
-            string connectionURL = "http://127.0.0.1:43027"; 
+            string connectionURL = "http://10.199.219.221:8080";
 
             var connection = new HubConnectionBuilder()
-                .WithUrl(connectionURL+ "/alarmHub", options =>
+                .WithUrl(connectionURL + "/alarmHub", options =>
                 {
                     options.Cookies = cookies;
                 })
                 .WithAutomaticReconnect()
                 .Build();
 
-            connection.On<string>("Alarm", async (msg) =>
+            connection.On<AlarmDTO>("Alarm", async (dto) =>
             {
-                Console.WriteLine(msg);
+                var originalColor = Console.ForegroundColor;
+
+                switch (dto.Priority)
+                {
+                    case 1:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    case 2:
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        break;
+                    case 3:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    default:
+                        break;
+                }
+                Console.WriteLine(dto.Message);
+                Console.ForegroundColor = originalColor;
             });
-
-            await connection.StartAsync();
-
+            Console.ForegroundColor = ConsoleColor.Red;
+            while (true)
+            {
+                try
+                {
+                    await connection.StartAsync();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Can't connect to server. Trying again");
+                    continue;
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
             await connection.InvokeAsync("InitSub");
             Console.WriteLine("[CONSOLE] Successfully subscribed to the hub");
-            
+            Console.ForegroundColor = ConsoleColor.White;
 
             _ = Task.Run(() => InputCommandLoop(connectionURL));
 
@@ -53,7 +83,7 @@ namespace ConsoleApplication
 
                 if (string.IsNullOrEmpty(input)) continue;
 
-                if(input.Equals("exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
+                if (input.Equals("exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
 
                 if (!input.StartsWith("/"))
                 {
@@ -93,7 +123,8 @@ namespace ConsoleApplication
                     {
                         Console.WriteLine($"[Console] Error sending HTTP request: {ex.Message}");
                     }
-                }else if (command.Equals("block"))
+                }
+                else if (command.Equals("block"))
                 {
                     if (parts.Length < 2 || string.IsNullOrWhiteSpace(parts[1]))
                     {
