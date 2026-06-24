@@ -1,22 +1,25 @@
+<<<<<<< HEAD
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using ConsoleApplication.DTO;
 using System;
+=======
+﻿using System;
+>>>>>>> parent of 16aea24 (Merge pull request #10 from isidorakorda/feature/deployment)
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ConsoleApplication
 {
     internal class Program
     {
-        private static readonly HttpClient httpClient = new HttpClient();
         static async Task Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.WriteLine("Console Application is up and running...");
+<<<<<<< HEAD
             var cookies = new CookieContainer();
 
             string connectionURL = "http://10.199.219.221:8080";
@@ -26,6 +29,11 @@ namespace ConsoleApplication
                 {
                     options.Cookies = cookies;
                 })
+=======
+
+            var connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5052/alarmHub")
+>>>>>>> parent of 16aea24 (Merge pull request #10 from isidorakorda/feature/deployment)
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -67,6 +75,7 @@ namespace ConsoleApplication
             Console.ForegroundColor = ConsoleColor.Green;
             await connection.InvokeAsync("InitSub");
             Console.WriteLine("[CONSOLE] Successfully subscribed to the hub");
+<<<<<<< HEAD
             Console.ForegroundColor = ConsoleColor.White;
 
             _ = Task.Run(() => InputCommandLoop(connectionURL));
@@ -156,6 +165,9 @@ namespace ConsoleApplication
                     }
                 }
             }
+=======
+            Console.ReadLine();
+>>>>>>> parent of 16aea24 (Merge pull request #10 from isidorakorda/feature/deployment)
         }
     }
 }

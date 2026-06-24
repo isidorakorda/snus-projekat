@@ -29,6 +29,7 @@ namespace Server.Service
             }
 
             await _connection.InvokeAsync("SendAlarm", dto);
+
         }
     }
 }
