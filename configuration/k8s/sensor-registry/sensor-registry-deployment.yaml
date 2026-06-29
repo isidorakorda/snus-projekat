@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: sensor-registry
+  namespace: backend
+
+  labels:
+    app: sensor-registry
+    group: sensor-registry
+
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      group: sensor-registry
+
+  template:
+    metadata:
+      labels: 
+        app: sensor-registry
+        group: sensor-registry
+
+    spec:
+      containers:
+        - name: sensor-registry
+          image: sensor-registry:latest
+          imagePullPolicy: Never
+          
+          ports:
+          - containerPort: 8082
+          env:
+          - name: ASPNETCORE_URLS
+            value: "http://+:8082"
+          - name: ConnectionStrings__DefaultConnection
+            value: "Host=postgres;Port=5432;Database=default_db;Username=admin;Password=admin;SSL Mode=Disable"

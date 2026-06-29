@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: consensus-service
+  namespace: backend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: consensus-service
+
+  template:
+    metadata:
+      labels: 
+        app: consensus-service
+
+    spec:
+      containers:
+        - name: consensus-service
+          image: consensus-service:latest
+          imagePullPolicy: Never
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=postgres;Port=5432;Database=default_db;Username=admin;Password=admin;SSL Mode=Disable"

@@ -52,3 +52,27 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# All env variables
+*.env
+
+# Ignore postgres data
+*-secrets.yaml
+*/db-data
+
+
+.vs/
+bin/
+obj/
+*.user
+*.suo
+appsettings.json
+/.vs
+/ApiGateway/appsettings.Development.json
+/SensorRegistry/appsettings.Development.json
+/Server/appsettings.json
+/.vs/SNUS.slnx/v18/DocumentLayout.backup.json
+/.vs/SNUS.slnx/v18/DocumentLayout.json
+/.vs/SNUS.slnx/v18/.suo
+/.vs/SNUS.slnx/v18/.futdcache.v2
+[Pp]ackages/
